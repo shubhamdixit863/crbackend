@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"github.com/elastic/go-elasticsearch/v7"
 	"github.com/elastic/go-elasticsearch/v7/esutil"
-	"log"
 	"microservicesgo/logger"
 )
 
@@ -32,11 +31,11 @@ func (l ListingRepositoryElastic) FindAllListings() ([]Listing, error) {
 	res, err := l.client.Search(l.client.Search.WithIndex("listing"), l.client.Search.WithPretty())
 
 	if err != nil {
-		log.Fatalf("Error getting response: %s", err)
+		return listing, err
 	}
 
 	if err := json.NewDecoder(res.Body).Decode(&r); err != nil {
-		log.Fatalf("Error parsing the response body: %s", err)
+		return listing, err
 	}
 
 	// Print the ID and document source for each hit.
@@ -48,6 +47,10 @@ func (l ListingRepositoryElastic) FindAllListings() ([]Listing, error) {
 		li, _ := NewListingBuilder().Location(sourceMap["location"].(string)).
 			Title(sourceMap["title"].(string)).
 			Images(sourceMap["files"].(string)).
+			Location(sourceMap["location"].(string)).
+			Description(sourceMap["description"].(string)).
+			Pricing(sourceMap["pricing"].(string)).
+			Facilities(sourceMap["facilities"].(string)).
 			Build()
 
 		listing = append(listing, *li)
