@@ -7,6 +7,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
+	"github.com/rs/cors"
 
 	"log"
 	"microservicesgo/domain"
@@ -45,11 +46,16 @@ func Start() {
 		Methods(http.MethodGet).
 		Name("GetListing")
 
-	// starting server
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowCredentials: true,
+	})
+	handler := c.Handler(router)
+
 	address := os.Getenv("SERVER_ADDRESS")
 	port := os.Getenv("SERVER_PORT")
-
-	log.Fatal(http.ListenAndServe(fmt.Sprintf("%s:%s", address, port), router))
+	logger.Info(fmt.Sprintf("Starting OAuth server on %s:%s ...", address, port))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf("%s:%s", address, port), handler))
 
 }
 
