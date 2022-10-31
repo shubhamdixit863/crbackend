@@ -1,5 +1,7 @@
 package domain
 
+import "microservicesgo/dto"
+
 type Listing struct {
 	Title          string `json:"title"`
 	Category       string `json:"category"`
@@ -20,7 +22,8 @@ type Listing struct {
 
 type ListingRepository interface {
 	AddListing(listing Listing) error
-	FindAllListings() ([]Listing, error)
+	FindAllListings() ([]dto.ListingResponse, error)
+	SearchListing(id string) ([]dto.ListingResponse, error)
 }
 
 // Listing builder pattern code

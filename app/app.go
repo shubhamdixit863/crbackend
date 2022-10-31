@@ -37,14 +37,19 @@ func Start() {
 
 	// define routes
 	router.
-		HandleFunc("/addListing", us.addListing).
+		HandleFunc("/listing", us.addListing).
 		Methods(http.MethodPost).
 		Name("AddListing")
 
 	router.
-		HandleFunc("/getListing", us.getListing).
+		HandleFunc("/listing", us.getListing).
 		Methods(http.MethodGet).
 		Name("GetListing")
+
+	router.
+		HandleFunc("/listing/{id}", us.getListingById).
+		Methods(http.MethodGet).
+		Name("GetListingById")
 
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},
@@ -54,7 +59,7 @@ func Start() {
 
 	address := os.Getenv("SERVER_ADDRESS")
 	port := os.Getenv("SERVER_PORT")
-	logger.Info(fmt.Sprintf("Starting OAuth server on %s:%s ...", address, port))
+	logger.Info(fmt.Sprintf("Starting Listing  server on %s:%s ...", address, port))
 	log.Fatal(http.ListenAndServe(fmt.Sprintf("%s:%s", address, port), handler))
 
 }

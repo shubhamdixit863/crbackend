@@ -2,6 +2,7 @@ package app
 
 import (
 	"encoding/json"
+	"github.com/gorilla/mux"
 	"microservicesgo/dto"
 	"microservicesgo/logger"
 	"microservicesgo/service"
@@ -73,6 +74,19 @@ func (us *UserHandlers) addListing(w http.ResponseWriter, r *http.Request) {
 
 func (us *UserHandlers) getListing(w http.ResponseWriter, r *http.Request) {
 	listing, err := us.service.GetListing()
+	if err != nil {
+		writeResponse(w, 200, err.Error())
+
+		return
+	}
+
+	writeResponse(w, 200, listing)
+
+}
+
+func (us *UserHandlers) getListingById(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	listing, err := us.service.SearchListing(params["id"])
 	if err != nil {
 		writeResponse(w, 200, err.Error())
 

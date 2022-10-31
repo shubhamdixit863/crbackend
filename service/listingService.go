@@ -1,10 +1,14 @@
 package service
 
-import "microservicesgo/domain"
+import (
+	"microservicesgo/domain"
+	"microservicesgo/dto"
+)
 
 type ListingService interface {
 	AddListing(listing domain.Listing) error
-	GetListing() ([]domain.Listing, error)
+	GetListing() ([]dto.ListingResponse, error)
+	SearchListing(id string) ([]dto.ListingResponse, error)
 }
 
 type DefaultListingService struct {
@@ -17,9 +21,14 @@ func (dls *DefaultListingService) AddListing(listing domain.Listing) error {
 
 }
 
-func (dls *DefaultListingService) GetListing() ([]domain.Listing, error) {
+func (dls *DefaultListingService) GetListing() ([]dto.ListingResponse, error) {
 
 	return dls.repo.FindAllListings()
+
+}
+func (dls *DefaultListingService) SearchListing(id string) ([]dto.ListingResponse, error) {
+
+	return dls.repo.SearchListing(id)
 
 }
 
