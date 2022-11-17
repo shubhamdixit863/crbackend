@@ -22,7 +22,7 @@ type Listing struct {
 
 type ListingRepository interface {
 	AddListing(listing Listing) error
-	FindAllListings() ([]dto.ListingResponse, error)
+	FindAllListings(size, offset int) ([]dto.ListingResponse, int, error)
 	SearchListing(id string) ([]dto.ListingResponse, error)
 }
 

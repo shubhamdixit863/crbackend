@@ -25,20 +25,29 @@ func (l ListingRepositoryElastic) AddListing(listing Listing) error {
 
 }
 
-func (l ListingRepositoryElastic) FindAllListings() ([]dto.ListingResponse, error) {
+func (l ListingRepositoryElastic) FindAllListings(size, offset int) ([]dto.ListingResponse, int, error) {
+
 	var r map[string]interface{}
+	var total int
 
 	var listing []dto.ListingResponse
 
-	res, err := l.client.Search(l.client.Search.WithIndex("listing"), l.client.Search.WithPretty())
+	res, err := l.client.Search(l.client.Search.WithIndex("listing"), l.client.Search.WithPretty(), l.client.Search.WithSize(size),
+		l.client.Search.WithFrom(offset),
+		l.client.Search.WithTrackTotalHits(true),
+	)
 
 	if err != nil {
-		return listing, err
+		logger.Error(err.Error())
+		return listing, total, err
 	}
 
 	if err := json.NewDecoder(res.Body).Decode(&r); err != nil {
-		return listing, err
+		logger.Error(err.Error())
+
+		return listing, total, err
 	}
+	total = int(r["hits"].(map[string]interface{})["total"].(map[string]interface{})["value"].(float64))
 
 	for _, hit := range r["hits"].(map[string]interface{})["hits"].([]interface{}) {
 		source := hit.(map[string]interface{})["_source"]
@@ -59,7 +68,7 @@ func (l ListingRepositoryElastic) FindAllListings() ([]dto.ListingResponse, erro
 
 	}
 
-	return listing, nil
+	return listing, total, err
 
 }
 
