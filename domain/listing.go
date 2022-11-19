@@ -24,6 +24,7 @@ type ListingRepository interface {
 	AddListing(listing Listing) error
 	FindAllListings(size, offset int) ([]dto.ListingResponse, int, error)
 	SearchListing(id string) ([]dto.ListingResponse, error)
+	//TextSearchListing(text, location, category string)
 }
 
 // Listing builder pattern code
