@@ -7,7 +7,7 @@ import (
 
 type ListingService interface {
 	AddListing(listing domain.Listing) error
-	GetListing(size, offset int) (interface{}, error)
+	GetListing(request *dto.SearchRequest) (interface{}, error)
 	SearchListing(id string) ([]dto.ListingResponse, error)
 }
 
@@ -21,8 +21,9 @@ func (dls *DefaultListingService) AddListing(listing domain.Listing) error {
 
 }
 
-func (dls *DefaultListingService) GetListing(size, offset int) (interface{}, error) {
-	listing, total, err := dls.repo.FindAllListings(size, offset)
+func (dls *DefaultListingService) GetListing(request *dto.SearchRequest) (interface{}, error) {
+
+	listing, total, err := dls.repo.FindAllListings(int(request.Limit), int(request.Page), request.Search, request.Category, request.Location)
 	if err != nil {
 		return nil, err
 	}

@@ -3,13 +3,11 @@ package app
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"github.com/gorilla/mux"
 	"microservicesgo/dto"
 	"microservicesgo/logger"
 	"microservicesgo/service"
 	"net/http"
-	"strconv"
 	"strings"
 )
 
@@ -76,29 +74,16 @@ func (us *UserHandlers) addListing(w http.ResponseWriter, r *http.Request) {
 }
 
 func (us *UserHandlers) getListing(w http.ResponseWriter, r *http.Request) {
-	v := r.URL.Query()
 
-	size, err := strconv.Atoi(v.Get("limit"))
-
+	decoder := json.NewDecoder(r.Body)
+	request := &dto.SearchRequest{}
+	err := decoder.Decode(request)
 	if err != nil {
-		logger.Error(err.Error())
-
-		writeResponse(w, 200, errors.New("limit Should Be An Integer"))
+		writeResponse(w, 200, errors.New("please Send Proper Request Body"))
 
 		return
 	}
-
-	page, err := strconv.Atoi(v.Get("page"))
-
-	if err != nil {
-		logger.Error(err.Error())
-
-		writeResponse(w, 200, errors.New("page Should Be An Integer"))
-
-		return
-	}
-	listing, err := us.service.GetListing(size, page*size)
-	fmt.Println(listing)
+	listing, err := us.service.GetListing(request)
 	if err != nil {
 		writeResponse(w, 200, err.Error())
 

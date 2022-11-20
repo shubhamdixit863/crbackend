@@ -42,8 +42,8 @@ func Start() {
 		Name("AddListing")
 
 	router.
-		HandleFunc("/listing", us.getListing).
-		Methods(http.MethodGet).
+		HandleFunc("/listing/search", us.getListing).
+		Methods(http.MethodPost).
 		Name("GetListing")
 
 	router.
