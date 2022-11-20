@@ -97,7 +97,7 @@ func (us *UserHandlers) getListing(w http.ResponseWriter, r *http.Request) {
 
 		return
 	}
-	listing, err := us.service.GetListing(size, page)
+	listing, err := us.service.GetListing(size, page*size)
 	fmt.Println(listing)
 	if err != nil {
 		writeResponse(w, 200, err.Error())
