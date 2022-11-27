@@ -9,6 +9,7 @@ type ListingService interface {
 	AddListing(listing domain.Listing) error
 	GetListing(request *dto.SearchRequest) (interface{}, error)
 	SearchListing(id string) ([]dto.ListingResponse, error)
+	DeleteListing(id string) error
 }
 
 type DefaultListingService struct {
@@ -35,6 +36,12 @@ func (dls *DefaultListingService) GetListing(request *dto.SearchRequest) (interf
 func (dls *DefaultListingService) SearchListing(id string) ([]dto.ListingResponse, error) {
 
 	return dls.repo.SearchListing(id)
+
+}
+
+func (dls *DefaultListingService) DeleteListing(id string) error {
+
+	return dls.repo.DeleteListing("listing", id)
 
 }
 

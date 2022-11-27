@@ -51,6 +51,11 @@ func Start() {
 		Methods(http.MethodGet).
 		Name("GetListingById")
 
+	router.
+		HandleFunc("/listing/{id}", us.deleteListingById).
+		Methods(http.MethodDelete).
+		Name("DeleteListingById")
+
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},
 		AllowCredentials: true,

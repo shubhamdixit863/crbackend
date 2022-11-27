@@ -106,3 +106,16 @@ func (us *UserHandlers) getListingById(w http.ResponseWriter, r *http.Request) {
 	writeResponse(w, 200, listing)
 
 }
+
+func (us *UserHandlers) deleteListingById(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	err := us.service.DeleteListing(params["id"])
+	if err != nil {
+		writeResponse(w, 200, err.Error())
+
+		return
+	}
+
+	writeResponse(w, 200, "Listing Deleted")
+
+}

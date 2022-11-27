@@ -230,6 +230,16 @@ func (l ListingRepositoryElastic) SearchListing(id string) ([]dto.ListingRespons
 
 }
 
+func (l ListingRepositoryElastic) DeleteListing(id, index string) error {
+
+	_, err := l.client.Delete(index, id)
+	if err != nil {
+		return err
+	}
+
+	return err
+}
+
 func NewListingRepositoryElastic(client *elasticsearch.Client) *ListingRepositoryElastic {
 	return &ListingRepositoryElastic{
 		client: client,

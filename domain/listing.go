@@ -24,6 +24,7 @@ type ListingRepository interface {
 	AddListing(listing Listing) error
 	FindAllListings(size, offset int, search, category, location string) ([]dto.ListingResponse, int, error)
 	SearchListing(id string) ([]dto.ListingResponse, error)
+	DeleteListing(index, id string) error
 	//TextSearchListing(text, location, category string)
 }
 
