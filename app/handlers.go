@@ -25,6 +25,11 @@ func writeResponse(w http.ResponseWriter, code int, data interface{}) {
 	}
 }
 
+func (us *UserHandlers) HealthCheck(w http.ResponseWriter, r *http.Request) {
+	writeResponse(w, 200, "Server Working Properly")
+
+}
+
 func (us *UserHandlers) addListing(w http.ResponseWriter, r *http.Request) {
 	files, err := HandleMultipleFileLocal(r)
 

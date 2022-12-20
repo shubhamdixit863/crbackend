@@ -8,7 +8,6 @@ import (
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
 	"github.com/rs/cors"
-
 	"log"
 	"microservicesgo/domain"
 	"microservicesgo/logger"
@@ -29,13 +28,16 @@ func sanityCheck() {
 	}
 }
 
-func Start() {
-	sanityCheck()
+func Setup() *mux.Router {
 
 	router := mux.NewRouter()
 	us := UserHandlers{service.NewDefaultListingService(domain.NewListingRepositoryElastic(getElasticClient())), service.NewFileUploadService(configS3())}
 
 	// define routes
+	router.
+		HandleFunc("/health", us.HealthCheck).
+		Methods(http.MethodGet).
+		Name("HealthCheck")
 	router.
 		HandleFunc("/listing", us.addListing).
 		Methods(http.MethodPost).
@@ -62,10 +64,16 @@ func Start() {
 	})
 	handler := c.Handler(router)
 
-	address := os.Getenv("SERVER_ADDRESS")
-	port := os.Getenv("SERVER_PORT")
+	address := "localhost"
+	port := "8080"
 	logger.Info(fmt.Sprintf("Starting Listing  server on %s:%s ...", address, port))
 	log.Fatal(http.ListenAndServe(fmt.Sprintf("%s:%s", address, port), handler))
+	return router
+}
+
+func Start() {
+	sanityCheck()
+	Setup()
 
 }
 
